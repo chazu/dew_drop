@@ -1,0 +1,34 @@
+import sys
+sys.path.append("./../")
+
+import unittest
+
+from component import Component
+from behaviors.exports import network
+
+class TestNetworkBehaviors(unittest.TestCase):
+
+    def test_get_network_hosts(self):
+        subject = Component()
+        remote_host = Component()
+        network_link = Component()
+
+        network_link.state.set_variable('IS_NETWORK_LINK')
+        remote_host.state.set_variable('IS_NETWORK_HOST')
+
+        subject.establish_duplex(network_link)
+        remote_host.establish_duplex(network_link)
+
+        subject.register_behavior(network.GetNetworkHosts)
+
+        network.GetNetworkHosts.behave(subject)
+
+        self.assertEqual(len(subject.item_outputs), 1)
+        self.assertEqual(len(subject.item_inputs), 1)
+
+        self.assertEqual(len(subject.state.available_hosts), 1)
+        self.assertEqual(subject.state.available_hosts, remote_host)
+
+if __name__ == "__main__":
+
+    unittest.main()

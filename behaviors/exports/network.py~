@@ -1,0 +1,23 @@
+import sys
+sys.path.append("./../")
+##############################################
+# Behaviors related to network functionality #
+##############################################
+
+from base import Behavior
+import requirements as req
+
+class GetNetworkHosts(Behavior):
+
+    requirements = [req.has_physical_link, req.has_physical_link_to_host]
+    input_requirements = []
+    output_requirements = []
+    state_types = []
+
+    @staticmethod
+    def behave(component, **kwargs):
+        component.state. \
+            set_variable('available_hosts', \
+                             component.components.with_flag('IS_NETWORK_LINK') \
+                             .outputs().with_flag('IS_NETWORK_HOST')
+                         )

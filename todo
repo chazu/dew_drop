@@ -1,0 +1,36 @@
+- Implement iterable protocol for componentCollection
+- Program basic urwid item assembly tui
+- 
+
+- Requirements Rework -
+  - Behaviors have three types of requirements -
+  - Overall requirements
+  - Input requirements
+  - Output requirements
+
+
+
+- write script to generate charts for durability curves n stuff
+- work on item composition
+- work on item decomposition
+- work on materials?
+work on behaviors/requirements
+
+possibilities:
+
+dynamically modifying the state machine of an item as its instantiated (state machine mixins) vs multiple state machines vs state machine plus booleans for things like operability
+
+IDEAS:
+
+compartments
+config dictionary generation
+Standards (usb, rs-232, etc)
+
+IMPORTANT
+---------
+
+When we put components together into an item, the assumption is that we're going to be triggering behaviors on the item which arise as a consequence of the components' individual abilities. This means we'll essentially be short-circuiting the behavior/requirement cycle. All we need to know is, has anything which fulfills the needed requirements for the current action broken since last time? if yes, fail. if no, continue and evaluate the results.
+
+However, we should be able to execute the behaviors of components which are responsible for the item's emergent behavior. For example, we'll usually be using the OpenDoor ability of the door, but we should be able to use the door actuator's "output force" behavior if we have access to the actuator.  This is where sending things between inputs and outputs comes into play.  it won't be necessary unless we execute something which explicitly outputs.  receipt of a signal will essentially trigger the emergent behavior (in this case, open door or close door) if conditions are met
+
+WHAT I love this shit.
