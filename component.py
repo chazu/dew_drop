@@ -73,17 +73,24 @@ class Component(object):
 
     def register_behavior(self, behavior):
         self.behaviors.append(behavior)
-        self.register_signal_handlers(self, behavior)
+        self.register_signal_handlers(behavior)
+        self.register_initial_behavior_state(behavior)
         # TODO modify state depending on the behavior registered here
 
     def register_component(self, component):
         self.components.append(component)
         component.container = self
-        print "FUCK" * 999
 
         # TODO Aggregate behaviors and state as necessary.
         # TODO Alter state with relevant variables, callbacks,
         # etc
+
+    def register_initial_behavior_state(self, behavior):
+        for key, value in behavior.initial_state:
+            if hasattr(behavior.initial_state[key], '__call__'):
+                self.state[key] = value(self)
+            else:
+                self.state[key] = value
 
     ## TESTING REQUIREMENTS ##########################################
     def test_requirements(self, behavior):

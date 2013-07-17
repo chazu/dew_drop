@@ -1,7 +1,9 @@
 import sys
 sys.path.append("./../")
+
 from moka import *
 
+from graph_proxy import GraphProxy
 from util import *
 
 ##############################################
@@ -12,6 +14,12 @@ from behaviors.base import Behavior
 from behaviors.signal_handlers import network
 from behaviors.requirements import requirement as req
 from behaviors.requirements import network as network_req
+
+state_namespace = "network"
+
+initial_state = {
+    "graph_proxy": (lambda x: GraphProxy.new(x))
+}
 
 class GetNetworkHosts(Behavior):
 
@@ -27,11 +35,7 @@ class GetNetworkHosts(Behavior):
     @staticmethod
     def behave(component, **kwargs):
         # Return all nodes from all networks
-        all_host_lists = (
-            [x.hosts() for x in component.state.current_state["networks"]]
-        )
-        # TODO Remove duplicate hosts?
-        return flatten(all_host_lists)
+        return component.state["graph_proxy"].nodes()
 
 class QueryAdditionalHosts(Behavior):
 
