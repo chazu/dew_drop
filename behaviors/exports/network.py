@@ -2,6 +2,8 @@ import sys
 sys.path.append("./../")
 from moka import *
 
+from util import *
+
 ##############################################
 # Behaviors related to network functionality #
 ##############################################
@@ -13,7 +15,7 @@ from behaviors.requirements import network as network_req
 
 class GetNetworkHosts(Behavior):
 
-    requirements = []
+    requirements = [network_req.is_network_host]
     input_requirements = []
     output_requirements = []
     name = "Get Network Hosts"
@@ -24,10 +26,13 @@ class GetNetworkHosts(Behavior):
 
     @staticmethod
     def behave(component, **kwargs):
-        if component.state.has_flag("IS_NETWORK_LINK"):
-            pass
-        else:
-            List(self.components.with_flag("IS_NETWORK_LINK")).map(lambda x: x.state
+        # Return all nodes from all networks
+        all_host_lists = (
+            [x.hosts() for x in component.state.current_state["networks"]]
+        )
+        # TODO Remove duplicate hosts?
+        return flatten(all_host_lists)
+
 class QueryAdditionalHosts(Behavior):
 
     requirements = []

@@ -1,67 +1,59 @@
-from fysom import Fysom
+import logging
+from copy import copy
 
-# TODO Set up a default state machine
+from util import *
 
-class StateType():
-
-    def __init__(self, name, config_dict={}):
-        self.name = name
-        self.owner = None
-        self.behaviors = []
-
-    def set_variable(self, var, value=None):
-        self.__dict__[var] = value
-
-    def set_owner(self, owner):
-        self.owner = owner
-        for behavior in self.behaviors:
-            self.owner.register_behavior(behavior)
-
-    def unset_owner(self):
-        for behavior in self.behaviors:
-            self.owner.unregister_behavior(behavior)
-
+logging.basicConfig(level=logging.DEBUG)
 
 class State(object):
 
-    def __init__(self, *args):
+    def __init__(self, spec=None):
         self.flags = []
-        self.states = {}
-        if len(args) > 0:
-            if len(args) > 0:
-                for state_type in args:
-                    self.states[state_type.name] = state_type
+        self.spec  = spec if spec else {}
+        self.current_state = copy(self.spec)
 
-    def add_state_type(self, state_type):
-        for state_type in self.states:
-            self.states[state_type.name] = state_type()
+    def merge_state(self, path_list, state_hash):
+        """
+        For use during behavior registration -
+        Adds state to self.current_state
+        """
+        multiIndex(self.current_state, path_list) = state_hash
 
-    def set_flag(self, flag):
-        self.flags.append(flag)
+    def specifies(self, key, value=None, path=None):
+        """
+        Key - The key to search for
+        Value - A value to check equality for
+        Path - The path in the spec to search
 
-    def has_flag(self, flag):
-        return flag in self.flags
+        True if the spec doc has the key.
+        If value is passed in, True only
+        if key is present and equal to value
+        """
+        try:
+            if path != None and isDict(multiIndex(self.current_state, path)):
+                target = multiIndex(self.current_state, path)
+                logging.debug("Specification found: ")
+                logging.debug("Key   : " + key)
+                logging.debug("path  : " + str(path))
+                logging.debug("value: " + str(target))
+                return key in target.keys()
+            else:
+                target = self.current_state
+                logging.debug("Specification found: ")
+                logging.debug("Key         : " + key)
+                logging.debug("equals value: " + str(value))
+                logging.debug("at spec path: " + str(path))
+                return key in target.keys() and (
+                    target[key] == value if value != None else True)
+        except KeyError:
+            logging.debug("WARNING: Key error when requesting path " + \
+                str(path) + " for widget " + self.name)
 
-    def set_variable(self, var, value=None):
-        self.__dict__[var] = value
-
-    def has_variable(self, flag):
-        return flag in self.__dict__
-
-    def __contains__(self, state_type_name):
-        return state_type_name in self.states
-
-    def __getattr__(self, attribute):
-        return None
+    def specifies_not_equal(self, key, value):
+        """
+        True if the value is specified but not equal to given value
+        """
+        return self.current_state[key] != value
 
     def report(self):
-        print("+++++++++")
-        print("+ FLAGS +")
-        print("+++++++++")
-        print(self.flags)
-        print("++++++++")
-        print("+ VARS +")
-        print("++++++++")
-        print(self.__dict__)
-
-# STATE LIBRARY ##################################
+        pass
