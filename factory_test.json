@@ -1,0 +1,15 @@
+{
+  "name": "Test Unit",
+  "config": {
+    "longevity": 10000,
+      "durability_coefficient": 0,
+      "unreliability_threshold": 0,
+      "failure_threshold": 0,
+      "inaccuracy_rating": 0,
+      "inaccuracy_offset": 0,
+      "inaccuracy_growth_factor": 0
+  },
+  "behaviors": [
+    ["network","GetNetworkHosts"]
+  ]
+}

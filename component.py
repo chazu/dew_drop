@@ -147,7 +147,8 @@ class Component(object):
         via direct behavior execution.
         behavior - A behavior class with signal handlers
         """
-        self.signal_handlers = dict(self.signal_handlers.items() + behavior.signal_handlers.items())
+        for handler in behavior.signal_handlers:
+            self.signal_handlers[handler[0]] = getattr(handler[1], 'behave')
 
     ## DIRECT BEHAVIOR EXECUTION########################################
     def send(self, signal, args={}):

@@ -1,5 +1,6 @@
 import sys
 sys.path.append("./../")
+sys.path.append("./../../")
 
 from moka import *
 
@@ -19,7 +20,7 @@ state_namespace = "network"
 
 initial_state = {
     "graph_proxy": (lambda x: GraphProxy.new(x))
-}
+    }
 
 class GetNetworkHosts(Behavior):
 
@@ -27,6 +28,7 @@ class GetNetworkHosts(Behavior):
     name = "Get Network Hosts"
     aggregates_to_item = True
     description = "Get all network hosts connected to component"
+    signal_handlers = []
 
     @staticmethod
     def behave(component, **kwargs):
@@ -40,6 +42,7 @@ class AcknowledgeConnectionRequest(Behavior):
     name = "Acknowlege Connection Request"
     aggregates_to_item = True
     description = "Add the host to your network"
+    signal_handlers = []
 
     @staticmethod
     def behave(component, **kwargs):
@@ -53,8 +56,10 @@ class DisconnectHost(Behavior):
     name = "Disconnect Host"
     aggregates_to_item = True
     description = "Disconnect Host"
+    signal_handlers = []
 
     @staticmethod
-    def behavre(component, **kwargs):
-        component.state["network".graph_proxy.remove_link(
-                kwargs["target"])
+    def behave(component, **kwargs):
+        component.state["network"].graph_proxy.remove_link(
+            kwargs["target"])
+

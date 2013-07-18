@@ -17,7 +17,8 @@ class State(object):
         For use during behavior registration -
         Adds state to self.current_state
         """
-        multiIndex(self.current_state, path_list) = state_hash
+        res = multiIndex(self.current_state, path_list)
+        res = state_hash
 
     def specifies(self, key, value=None, path=None):
         """
