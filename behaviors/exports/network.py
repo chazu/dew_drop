@@ -24,32 +24,37 @@ initial_state = {
 class GetNetworkHosts(Behavior):
 
     requirements = [network_req.is_network_host]
-    input_requirements = []
-    output_requirements = []
     name = "Get Network Hosts"
     aggregates_to_item = True
-    description = """
-    Get all network hosts connected to component
-    """
+    description = "Get all network hosts connected to component"
 
     @staticmethod
     def behave(component, **kwargs):
         # Return all nodes from all networks
         return component.state["graph_proxy"].nodes()
 
-class QueryAdditionalHosts(Behavior):
 
-    requirements = []
-    input_requirements = []
-    output_requirements = []
-    name = "Query For Hosts"
+class AcknowledgeConnectionRequest(Behavior):
+
+    requirements = [network_req.is_network_host]
+    name = "Acknowlege Connection Request"
     aggregates_to_item = True
-    signal_handlers = "Foo", "Bar" #TODO Register signal handlers on registration
-    description = """
-    Request host info from directly connected hosts
-    """
+    description = "Add the host to your network"
 
     @staticmethod
     def behave(component, **kwargs):
-        for host in component.state.available_hosts:
-            host.send('query_hosts', {host: component})
+        component.state["network"].graph_proxy.add_link(
+            kwargs["target"])
+
+
+class DisconnectHost(Behavior):
+
+    requirements = [network_req.is_network_host]
+    name = "Disconnect Host"
+    aggregates_to_item = True
+    description = "Disconnect Host"
+
+    @staticmethod
+    def behavre(component, **kwargs):
+        component.state["network".graph_proxy.remove_link(
+                kwargs["target"])

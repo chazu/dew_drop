@@ -11,3 +11,5 @@ class Network:
 
     def hosts(self):
         self.graph_proxy.nodes()
+
+

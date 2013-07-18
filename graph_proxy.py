@@ -5,9 +5,9 @@ logging.basicConfig(level=logging.DEBUG)
 
 class GraphProxy:
 
-    def __init__(self, component_list):
+    def __init__(self, component_list, undirected=False):
 
-        self._graph = nx.DiGraph()
+        self._graph = nx.DiGraph() if undirected == False else nx.Graph()
         self._graph.add_nodes_from(component_list)
 
     def nodes(self):

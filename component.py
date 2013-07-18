@@ -53,8 +53,6 @@ class Component(object):
 
     def duplexes(self):
         "All components which are both inputs and outputs"
-        print self.item_inputs()
-        print self.item_outputs()
         return List(set(self.item_inputs()).intersection(self.item_outputs()))
 
     def __deepcopy__(self, memo):
@@ -94,10 +92,9 @@ class Component(object):
 
     ## TESTING REQUIREMENTS ##########################################
     def test_requirements(self, behavior):
-        a = False not in [req.recursively_test_component(self, requirement) for requirement in behavior.requirements]
-        b = False not in [req.test_component_inputs(self, requirement) for requirement in behavior.input_requirements]
-        c = False not in [req.test_component_outputs(self, requirement) for requirement in behavior.output_requirements]
-        return a and b and c
+        return False not in [req.recursively_test_component(self, requirement) \
+                             for requirement in behavior.requirements]
+
 
     ## BEHAVIOR EXECUTION ############################################
     def execute_behavior(self, behavior):
@@ -176,15 +173,6 @@ class Component(object):
 
     def get_pct_unreliable_longevity_used(self):
         return 1 - self.get_pct_unreliable_longevity_remaining()
-
-    ## INPUT/OUTPUT NETWORK QUERYING METHODS #####
-
-    def inputs_with_flag(self, flag):
-        return List(self.item_inputs).keep(lambda x: x.state.has_flag(flag))
-
-    def outputs_with_flag(self, flag):
-        return List(self.item_outputs).keep(lambda x: x.state.has_flag(flag))
-
 
     ## DEBUGGING METHODS ###############################################
 
