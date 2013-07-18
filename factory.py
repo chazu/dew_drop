@@ -28,4 +28,5 @@ class Factory:
 
 factory = Factory()
 
-factory.create_from_file("factory_test.json")
+a = factory.create_from_file("factory_test.json")
+print str(a.state["graph_proxy"])

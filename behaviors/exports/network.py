@@ -18,9 +18,7 @@ from behaviors.requirements import network as network_req
 
 state_namespace = "network"
 
-initial_state = {
-    "graph_proxy": (lambda x: GraphProxy.new(x))
-    }
+
 
 class GetNetworkHosts(Behavior):
 
@@ -29,6 +27,9 @@ class GetNetworkHosts(Behavior):
     aggregates_to_item = True
     description = "Get all network hosts connected to component"
     signal_handlers = []
+    initial_state = {
+        "graph_proxy": (lambda x: GraphProxy([x]))
+        }
 
     @staticmethod
     def behave(component, **kwargs):
@@ -43,6 +44,9 @@ class AcknowledgeConnectionRequest(Behavior):
     aggregates_to_item = True
     description = "Add the host to your network"
     signal_handlers = []
+    initial_state = {
+        "graph_proxy": (lambda x: GraphProxy([x]))
+        }
 
     @staticmethod
     def behave(component, **kwargs):
@@ -57,6 +61,9 @@ class DisconnectHost(Behavior):
     aggregates_to_item = True
     description = "Disconnect Host"
     signal_handlers = []
+    initial_state = {
+        "graph_proxy": (lambda x: GraphProxy([x]))
+        }
 
     @staticmethod
     def behave(component, **kwargs):

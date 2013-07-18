@@ -84,11 +84,21 @@ class Component(object):
         # etc
 
     def register_initial_behavior_state(self, behavior):
-        for key, value in behavior.initial_state:
-            if hasattr(behavior.initial_state[key], '__call__'):
-                self.state[key] = value(self)
-            else:
-                self.state[key] = value
+        for key in behavior.initial_state:
+            if not self.state.specifies(key):
+                if hasattr(behavior.initial_state[key], '__call__'):
+                    self.state[key] = behavior.initial_state[key](self)
+                else:
+                    self.state[key] = value
+
+    def register_signal_handlers(self, behavior):
+        """
+        Register callbacks to be executed when a signal is received
+        via direct behavior execution.
+        behavior - A behavior class with signal handlers
+        """
+        for handler in behavior.signal_handlers:
+            self.signal_handlers[handler[0]] = getattr(handler[1], 'behave')
 
     ## TESTING REQUIREMENTS ##########################################
     def test_requirements(self, behavior):
@@ -140,15 +150,6 @@ class Component(object):
         "Establish bidirectional communication"
         self.plug_into(other)
         self.plug_out_from(other)
-
-    def register_signal_handlers(self, behavior):
-        """
-        Register callbacks to be executed when a signal is received
-        via direct behavior execution.
-        behavior - A behavior class with signal handlers
-        """
-        for handler in behavior.signal_handlers:
-            self.signal_handlers[handler[0]] = getattr(handler[1], 'behave')
 
     ## DIRECT BEHAVIOR EXECUTION########################################
     def send(self, signal, args={}):

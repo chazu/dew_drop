@@ -12,6 +12,12 @@ class State(object):
         self.spec  = spec if spec else {}
         self.current_state = copy(self.spec)
 
+    def __getitem__(self, key):
+        return self.spec[key]
+
+    def __setitem__(self, key, value):
+        self.spec[key] = value
+
     def merge_state(self, path_list, state_hash):
         """
         For use during behavior registration -
